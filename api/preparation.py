@@ -43,12 +43,12 @@ def extract_filenames(file_id: str) -> list[str]:
     filenames = [img.filename for img in img_obj if img.filename]
     if not filenames:
         # p448: abortで処理を止める場合のコード
-        # abort(404, {"error_message": "filenames are not found in database"})
+        abort(404, {"error_message": "filenames are not found in database"})
 
         # p449: abortで処理を止めず、jsonifyを実装した場合のコード
-        return (
-            jsonify({"message": "filenames are not found in database", "result": 400}),
-            400,
-        )
+        # return (
+        #     jsonify({"message": "filenames are not found in database", "result": 400}),
+        #     400,
+        # )
 
     return filenames

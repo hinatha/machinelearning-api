@@ -3,8 +3,8 @@ import pickle
 import numpy as np
 from flask import jsonify
 
-from api.preparation import extract_filenames
-from api.preprocess import get_shrinked_img
+from .preparation import extract_filenames
+from .preprocess import get_shrinked_img
 
 
 def evaluate_probs(request) -> tuple:
