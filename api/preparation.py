@@ -1,6 +1,7 @@
 from pathlib import Path
 import uuid
-import os
+from dotenv import load_dotenv
+import boto3
 
 from flask import abort, current_app, jsonify
 from sqlalchemy.exc import SQLAlchemyError
@@ -8,6 +9,16 @@ from werkzeug.utils import secure_filename
 
 from api.models import ImageInfo, db
 
+load_dotenv()
+s3_client = boto3.client("s3")
+s3_client.create_bucket(
+    Bucket="handwriting-pics-bucket",
+    CreateBucketConfiguration={
+        'LocationConstraint': 'ap-northeast-1'
+    }
+)
+bucket = "handwriting-pics-bucket"
+folder = "pics-folder/"
 
 def load_filenames(dir_name: str) -> list[str]:
     """ 手書き文字画像が置いてあるパスからファイル名を取得し、リストを作成"""
@@ -46,7 +57,8 @@ def insert_filedata(request) -> tuple:
     for file in files:
         filename = secure_filename(file.filename)
         db.session.add(ImageInfo(file_id=file_id, filename=filename))
-        file.save(os.path.join("../handwriting_pics", filename))
+        key = folder + filename
+        s3_client.upload_fileobj(file, bucket, key)
     try:
         db.session.commit()
     except SQLAlchemyError as error:
