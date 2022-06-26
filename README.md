@@ -10,6 +10,7 @@ Endpoint           Methods  Rule
 -----------------  -------  -----------------------
 api.check_schema   POST     /v1/check-schema
 api.file_id        POST     /v1/file-id
+api.file_upload    POST     /v1/file-upload
 api.health         GET      /v1/health
 api.probabilities  POST     /v1/probabilities
 static             GET      /static/<path:filename>
@@ -20,6 +21,7 @@ static             GET      /static/<path:filename>
 - User can see result of number predict.
 - User can check schema.
 - User can check health status.
+- User can upload picture files.
 
 ### Project structure
 
@@ -108,8 +110,9 @@ with open('model.pickle', mode='wb') as fp:
 
 ```bash
 (.venv)$ cd api
+(.venv)$ export FLASK_ENV=development
 (.venv)$ export FLASK_APP=run.py
-(.venv)$ Flask run
+(.venv)$ flask run
 ```
 
 ### Execute pytest
