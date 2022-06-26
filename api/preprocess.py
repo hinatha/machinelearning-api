@@ -1,16 +1,19 @@
-from pathlib import Path
-
 import numpy as np
 from flask import current_app
 from PIL import Image
+from io import BytesIO
+import boto3
 
 
 def get_grayscale(filenames: list[str]):
     """読み込んだ手書き文字画像の色をグレースケールに変換する関数 (グレースケールは色の濃淡の明暗を分ける技法のことです。)"""
-    dir_name = current_app.config["DIR_NAME"]
-    dir_path = Path(__file__).resolve().parent.parent / dir_name
+    s3_client = boto3.client("s3")
+    bucket_name = current_app.config["BUCKET"]
+    dir_name = current_app.config["FOLDER"]
     for filename in filenames:
-        img = Image.open(dir_path / filename).convert("L")
+        key = dir_name + filename
+        img_file = s3_client.get_object(Bucket=bucket_name, Key=key)['Body'].read()
+        img = Image.open(BytesIO(img_file)).convert("L")
         yield img
 
 
