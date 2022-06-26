@@ -14,6 +14,14 @@ def health():
     return{"health": "ok"}
 
 
+# Save name of pictures in handwriting_pics to DB and return file_id.
+@api.post("/file-id")
+@validate_json
+@validate_schema("check_dir_name")
+def file_id():
+    return preparation.insert_filenames(request)
+
+
 # Save picture file to S3 and filename to DB and return file_id.
 @api.post("/file-upload")
 def file_upload():
